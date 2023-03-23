@@ -24,7 +24,7 @@ class Datapoint:
         assert isinstance(other,Datapoint)
         gte=0 # count of self[k]>=other[k]
         gt=0 # count of self[k]>other[k]
-        for k in xrange(len(self.vec)):
+        for k in range(len(self.vec)):
             if self.vec[k] >= other.vec[k]:
                 gte+=1
                 if self.vec[k] > other.vec[k]:
@@ -41,8 +41,8 @@ def nondominated_sort(dataset):
     numPareto = 0
 
     # pairwise comparisons
-    for n in xrange(len(dataset)):
-        for m in xrange(len(dataset)):
+    for n in range(len(dataset)):
+        for m in range(len(dataset)):
             if dataset[m].dominates(dataset[n]):
                 dataset[n].dominatedCount+=1
                 dataset[m].addToDominatingSet(n)
@@ -51,7 +51,7 @@ def nondominated_sort(dataset):
     front = []
     front2 = []
     tmpLevel = -10 # temporary value for Pareto level, will re-adjust later
-    for n in xrange(len(dataset)):
+    for n in range(len(dataset)):
         if dataset[n].dominatedCount == 0:
             dataset[n].paretoStatus = tmpLevel
             front.append(n)
@@ -70,7 +70,7 @@ def nondominated_sort(dataset):
         front2 = []
 
     # re-adjust pareto level
-    for n in xrange(len(dataset)):
+    for n in range(len(dataset)):
         oldLevel = dataset[n].paretoStatus
         if oldLevel != -1:
             dataset[n].paretoStatus = oldLevel-tmpLevel-1
@@ -91,7 +91,7 @@ def create_dataset(raw_vectors):
 
 def readfile(filename,multiplier=1.0):
     """Reads a vector file (objective values in one dimension)"""
-    with open(filename,'r') as f:
+    with open(filename,'r', encoding='utf-8-sig') as f:
         lines = f.readlines()
     vec = [multiplier*float(a.strip()) for a in lines]
     return vec
@@ -101,7 +101,7 @@ if __name__ == '__main__':
     try:
         opts, args = getopt.getopt(sys.argv[1:],"l:s:")
     except getopt.GetoptError:
-        print "pareto.py -l file1 -s file2 -l file3 ..."
+        print("pareto.py -l file1 -s file2 -l file3 ...")
         sys.exit(2)
 
     raw_vectors=[]
@@ -114,4 +114,4 @@ if __name__ == '__main__':
     dataset = create_dataset(raw_vectors)
     nondominated_sort(dataset)
     for s in dataset:
-        print s
+        print(s)
